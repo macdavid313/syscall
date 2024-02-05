@@ -1,0 +1,72 @@
+#+title: syscall
+#+subtitle: Portable system calls for Common Lisp
+#+author: Tianyu Gu
+#+email: gty@CLOS.org
+
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-bigblow.setup
+
+This library enables any Lisp, as long as supported by CFFI, to invoke system
+calls through a low-level foreign function interface.
+
+⚠ Note: Only these OS and architectures are supported at the moment:
+
++ linux-x86_64
++ linux-aarch64
++ macos-aarch64
+
+* Installation
+
+To install ~syscall~, you can use Quicklisp:
+
+#+BEGIN_SRC lisp
+(ql:quickload "syscall")
+#+END_SRC
+
+The C shared libraries are bundled with the source distributed and will be
+loaded during the evaluation of ~(ql:quickload "syscall")~.
+
+* Usage
+
+Here is a basic example of how to use syscall on Linux x86-64 platform:
+
+#+BEGIN_SRC lisp
+(sc:syscall syscall.constants:+GETPID+) ;; getpid
+#+END_SRC
+
+This will show you the current Lisp process's PID.
+
+~sc:syscall~ can take up to six arguments to the system call; alternatively, you
+may explicitly use these APIs if preferred, where ~sc:syscallN~ denotes that ~N~
+arguments shall be passed to a system call:
+
++ ~sc:syscall0~
++ ~sc:syscall1~
++ ~sc:syscall2~
++ ~sc:syscall3~
++ ~sc:syscall4~
++ ~sc:syscall5~
++ ~sc:syscall6~
+
+** Argument types and the return type
+
+~syscall~ and the variants only takes and return unsigned machine integer(s), so
+it is the caller's responsibility to:
+
+1. carefully convert all arguments to unsigned machine integers (~(unsigned-byte
+   64)~)
+2. interpret the returned unsigned machine integer
+
+** ~syscall.constants~ package
+
+For convenience, a set of system call numbers were parsed as constants in
+advance for all supported platforms. See
+~src/platform/your-platform/constants.lisp~ and [[file:gen-platform-constants.lisp][gen-platform-constants.lisp]] for
+more details.
+
+* Contributing
+
+Contributions are welcome! Please submit a pull request or open an issue on GitHub.
+
+* License
+
+~syscall~ is licensed under the MIT License.

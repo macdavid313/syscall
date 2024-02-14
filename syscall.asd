@@ -27,5 +27,7 @@
 (defsystem syscall/test
   :depends-on (#:syscall #:fiveam #:cffi)
   :components
-  ((:file "t/linux" :if-feature :linux))
+  ((:file "t/syscall" :if-feature (:or (:and :linux :x86-64)
+                                       (:and :linux :arm64)
+                                       (:and (:or :darwin :macos) :arm64))))
   :perform (test-op (op c) (uiop:symbol-call :fiveam :run-all-tests)))

@@ -1,0 +1,37 @@
+name: Test syscall
+
+on: [push]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        lisp: [sbcl-bin]
+        os: [ubuntu-22.04, macOS-14]
+
+    name: ${{ matrix.lisp }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Roswell
+        id: cache-roswell
+        uses: actions/cache@v4
+        with:
+          path: ~/.roswell
+          key: ${{ runner.os }}-${{ matrix.lisp }}-roswell
+
+      - name: Install Roswell
+        env:
+          LISP: ${{ matrix.lisp }}
+        run: |
+          curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+
+      - name: Install CI-Utils
+        run: |
+          ros install neil-lindquist/ci-utils
+
+      - name: Test syscall
+        run: |
+          ~/.roswell/bin/run-fiveam -l syscall/test :syscall.test

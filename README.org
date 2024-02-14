@@ -2,6 +2,7 @@
 #+subtitle: Portable system calls for Common Lisp
 #+author: Tianyu Gu
 #+email: gty@CLOS.org
+#+OPTIONS: ^:nil
 
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-bigblow.setup
 
@@ -60,8 +61,8 @@ it is the caller's responsibility to:
 
 For convenience, a set of system call numbers were parsed as constants in
 advance for all supported platforms. See
-~src/platform/your-platform/constants.lisp~ and [[file:gen-platform-constants.lisp][gen-platform-constants.lisp]] for
-more details.
+~src/platform/your-platform/constants.lisp~ and ~gen-platform-constants.lisp~
+for more details.
 
 * Contributing
 

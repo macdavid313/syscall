@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-14 Wed 15:32 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>syscall</title>
+<meta name="author" content="Tianyu Gu" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/bigblow_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/bigblow_theme/css/bigblow.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/bigblow_theme/css/hideshow.css"/>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/jquery-ui-1.10.2.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/jquery.zclip.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/bigblow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/bigblow_theme/js/hideshow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">syscall
+<br />
+<span class="subtitle">Portable system calls for Common Lisp</span>
+</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org9746f4a">1. Installation</a></li>
+<li><a href="#org3914191">2. Usage</a>
+<ul>
+<li><a href="#orgca9ee31">2.1. Argument types and the return type</a></li>
+<li><a href="#org3ee97a3">2.2. <code>syscall.constants</code> package</a></li>
+</ul>
+</li>
+<li><a href="#org06c2a70">3. Contributing</a></li>
+<li><a href="#org042dde4">4. License</a></li>
+</ul>
+</div>
+</div>
+<p>
+This library enables any Lisp, as long as supported by CFFI, to invoke system
+calls through a low-level foreign function interface.
+</p>
+
+<p>
+⚠ Note: Only these OS and architectures are supported at the moment:
+</p>
+
+<ul class="org-ul">
+<li>linux-x86_64</li>
+<li>linux-aarch64</li>
+<li>macos-aarch64</li>
+</ul>
+<div id="outline-container-org9746f4a" class="outline-2">
+<h2 id="org9746f4a"><span class="section-number-2">1.</span> Installation</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+To install <code>syscall</code>, you can use Quicklisp:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp"><span style="color: #D0BF68;">(</span>ql:quickload <span style="color: #FC6A5D;">"syscall"</span><span style="color: #D0BF68;">)</span>
+</pre>
+</div>
+
+<p>
+The C shared libraries are bundled with the source distributed and will be
+loaded during the evaluation of <code>(ql:quickload "syscall")</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org3914191" class="outline-2">
+<h2 id="org3914191"><span class="section-number-2">2.</span> Usage</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Here is a basic example of how to use syscall on Linux x86-64 platform:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp"><span style="color: #D0BF68;">(</span>sc:syscall syscall.constants:+GETPID+<span style="color: #D0BF68;">)</span> <span style="color: #6C7986;">;; </span><span style="color: #6C7986;">getpid</span>
+</pre>
+</div>
+
+<p>
+This will show you the current Lisp process&rsquo;s PID.
+</p>
+
+<p>
+<code>sc:syscall</code> can take up to six arguments to the system call; alternatively, you
+may explicitly use these APIs if preferred, where <code>sc:syscallN</code> denotes that <code>N</code>
+arguments shall be passed to a system call:
+</p>
+
+<ul class="org-ul">
+<li><code>sc:syscall0</code></li>
+<li><code>sc:syscall1</code></li>
+<li><code>sc:syscall2</code></li>
+<li><code>sc:syscall3</code></li>
+<li><code>sc:syscall4</code></li>
+<li><code>sc:syscall5</code></li>
+<li><code>sc:syscall6</code></li>
+</ul>
+</div>
+<div id="outline-container-orgca9ee31" class="outline-3">
+<h3 id="orgca9ee31"><span class="section-number-3">2.1.</span> Argument types and the return type</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<code>syscall</code> and the variants only takes and return unsigned machine integer(s), so
+it is the caller&rsquo;s responsibility to:
+</p>
+
+<ol class="org-ol">
+<li>carefully convert all arguments to unsigned machine integers (<code>(unsigned-byte
+   64)</code>)</li>
+<li>interpret the returned unsigned machine integer</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org3ee97a3" class="outline-3">
+<h3 id="org3ee97a3"><span class="section-number-3">2.2.</span> <code>syscall.constants</code> package</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+For convenience, a set of system call numbers were parsed as constants in
+advance for all supported platforms. See
+<code>src/platform/your-platform/constants.lisp</code> and <code>gen-platform-constants.lisp</code>
+for more details.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org06c2a70" class="outline-2">
+<h2 id="org06c2a70"><span class="section-number-2">3.</span> Contributing</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Contributions are welcome! Please submit a pull request or open an issue on GitHub.
+</p>
+</div>
+</div>
+<div id="outline-container-org042dde4" class="outline-2">
+<h2 id="org042dde4"><span class="section-number-2">4.</span> License</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<code>syscall</code> is licensed under the MIT License.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Tianyu Gu</p>
+<p class="date">Created: 2024-02-14 Wed 15:32</p>
+</div>
+</body>
+</html>

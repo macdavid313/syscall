@@ -34,4 +34,4 @@ jobs:
 
       - name: Test syscall
         run: |
-          ~/.roswell/bin/run-fiveam -l syscall/test :syscall.test
+          ~/.roswell/bin/run-fiveam -l syscall/test syscall.test

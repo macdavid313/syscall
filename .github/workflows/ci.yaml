@@ -1,4 +1,4 @@
-name: Test syscall
+name: Test
 
 on: [push]
 
@@ -12,26 +12,16 @@ jobs:
     name: ${{ matrix.lisp }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
+    env:
+      LISP: ${{ matrix.lisp }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Roswell
-        id: cache-roswell
-        uses: actions/cache@v4
+      - name: Set up ${{ matrix.lisp }}
+        uses: 40ants/setup-lisp@v2
+
+      - name: Test syscall with ${{ matrix.lisp }} on ${{ runner.os }}
+        uses: 40ants/run-tests@v2
         with:
-          path: ~/.roswell
-          key: ${{ runner.os }}-${{ matrix.lisp }}-roswell
-
-      - name: Install Roswell
-        env:
-          LISP: ${{ matrix.lisp }}
-        run: |
-          curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-
-      - name: Install CI-Utils
-        run: |
-          ros install neil-lindquist/ci-utils
-
-      - name: Test syscall
-        run: |
-          ~/.roswell/bin/run-fiveam -l syscall/test syscall.test
+          asdf-system: syscall

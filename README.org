@@ -6,6 +6,8 @@
 
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-bigblow.setup
 
+[[test][https://github.com/macdavid313/syscall/actions/workflows/ci.yaml/badge.svg?branch=master)]]
+
 This library enables any Lisp, as long as supported by CFFI, to invoke system
 calls through a low-level foreign function interface.
 

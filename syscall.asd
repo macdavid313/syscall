@@ -2,7 +2,7 @@
 (in-package #:asdf-user)
 
 (defsystem syscall
-  :version "0.1.0"
+  :version "0.2.0"
   :license "MIT"
   :author "Tianyu Gu <gty@CLOS.org>"
   :maintainer "Tianyu Gu <gty@CLOS.org>"

@@ -25,7 +25,9 @@ pub fn build(b: *std.Build) !void {
 
         const lib = b.addSharedLibrary(.{
             .name = "syscall",
-            .root_source_file = .{ .path = root_source_file_path },
+            .root_source_file = .{
+                .cwd_relative = root_source_file_path,
+            },
             .target = b.resolveTargetQuery(t),
             .optimize = .ReleaseFast,
         });
